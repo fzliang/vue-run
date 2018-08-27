@@ -1,5 +1,8 @@
 <template>
-  <div ref="preview" class="preview">
+  <div>
+    <div ref="preview" class="preview">
+      <pre class="err-msg">{{errMsg}}</pre>
+    </div>
   </div>
 </template>
 
@@ -17,6 +20,7 @@ export default class Preview extends Vue {
   private js: string = '';
   private style: string = '';
   private component: any = null;
+  private errMsg: any = '';
 
   public run(): void {
     this.destoryPreview();
@@ -43,7 +47,7 @@ export default class Preview extends Vue {
       this.splitCodeStr();
 
       if (this.tpl === '' || this.js === '') {
-          throw new Error('template or script not found');
+         return;
       }
 
       const e = new Function(this.js)();
@@ -52,7 +56,7 @@ export default class Preview extends Vue {
       const ext = V.extend(e);
       ext.use(ElementUI);
 
-      if (this.component = (new ext).$mount(),
+      if (this.component = (new ext!).$mount(),
         (this.$refs.preview as any).appendChild(this.component.$el),
         '' !== this.style
       ) {
@@ -62,13 +66,23 @@ export default class Preview extends Vue {
         styleEle.innerHTML = this.style;
         document.getElementsByTagName('head')[0].appendChild(styleEle);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (ex) {
+        console.log(ex.message)
+        let head = `[Vue warn]: Error in render: "`;
+        let tail = `(found in <Root>)`;
+
+        let msg = ex.message;
+        let start = msg.indexOf(head) > -1? msg.indexOf(head) + length : 0;
+        let end = msg.indexOf(tail) > -1? msg.indexOf(tail) : msg.length;
+
+        this.errMsg = msg.slice(start, end);
+        console.log(this.errMsg)
     }
   }
 
   private destoryPreview(): void {
     const styleEle = document.getElementById('preview-style');
+    this.errMsg = ''
     styleEle && styleEle!.parentNode!.removeChild(styleEle);
     if (this.component !== null) {
         (this.$refs.preview as any).removeChild(this.component.$el);
@@ -86,5 +100,8 @@ export default class Preview extends Vue {
 </script>
 
 <style scoped lang="less">
-
+  .err-msg {
+    color: red;
+    white-space: pre-wrap;
+  }
 </style>

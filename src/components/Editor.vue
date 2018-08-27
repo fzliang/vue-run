@@ -8,7 +8,8 @@
 <script lang="ts">
 import {Component, Vue, Model, Emit, Prop} from 'vue-property-decorator';
 
-const {codemirror} = require('vue-codemirror');
+// const {codemirror} = require('vue-codemirror');
+import {codemirror} from 'vue-codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/htmlmixed/htmlmixed.js';
 
