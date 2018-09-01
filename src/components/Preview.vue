@@ -64,7 +64,7 @@ export default class Preview extends Vue {
         this.style = this.style
           .replace(/[\r\n]/g, ' ').replace(/\s+/g, ' ')
           .replace(/^(?:\s*)([^}|{])*(?={)/, ($1) => '#' + divId + ' ' + $1)
-          .replace(/(?<=})([^}|{])*(?={)/g, ($1) => '#' + divId + ' ' + $1)
+          .replace(/(?<=[}|,])([^}|{])*(?={)/g, ($1) => '#' + divId + ' ' + $1)
 
         const styleEle = document.createElement('style') as any;
         styleEle.type = 'text/css';
