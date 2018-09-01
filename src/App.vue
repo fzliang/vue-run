@@ -40,6 +40,7 @@ export default class App extends Vue {
    <span>{{msg}}</span>
   </div>
 </template>
+
 <script>
   export default {
     data () {
@@ -52,8 +53,11 @@ export default class App extends Vue {
     }
   }
 <\/script>
-<style>
 
+<style>
+  div span {
+    color: red;
+  }
 </style>
 `;
 
