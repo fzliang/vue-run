@@ -61,7 +61,6 @@ export default class Preview extends Vue {
         (this.$refs.preview as any).appendChild(this.component.$el),
         '' !== this.style
       ) {
-        const id = 
         this.style = this.style
           .replace(/[\r\n]/g, ' ').replace(/\s+/g, ' ')
           .replace(/^(?:\s*)([^}|{])*(?={)/, ($1) => '#' + divId + ' ' + $1)
