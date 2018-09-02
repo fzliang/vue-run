@@ -7,6 +7,18 @@
       </div>
       <ul class="nav">
         <li>
+          Vue版本
+          <select v-model="vueVersion">
+            <option v-for="item in vueVersionList" :key="item">{{item}}</option>
+          </select>
+        </li>
+        <li>
+          Element版本
+          <select v-model="eleVersion">
+            <option v-for="item in eleVersionList" :key="item">{{item}}</option>
+          </select>
+        </li>
+        <li>
           <a class="nav-link contribute" @click="run"><i class="icon iconfont icon-kuaisuyunxing01"></i> 运行</a>
         </li>
       </ul>
@@ -16,17 +28,19 @@
         <Editor v-model="codeStr"></Editor>
       </div>
       <div class="item">
-        <Preview v-model="codeStr" ref="previewComp"></Preview>
+        <Preview v-model="codeStr" ref="previewComp" :vueVersion="vueVersion" :eleVersion="eleVersion"></Preview>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import Editor from './components/Editor.vue';
 import Preview from './components/Preview.vue';
 import './assets/style/reset.css';
+import { ELE_VERSION } from './constant/EleVersion'
+import { VUE_VERSION } from './constant/VueVersion'
 
 @Component({
   components: {
@@ -35,7 +49,7 @@ import './assets/style/reset.css';
   },
 })
 export default class App extends Vue {
-    public codeStr: string = `<template>
+    private codeStr: string = `<template>
   <div>
    <span>{{msg}}</span>
   </div>
@@ -61,12 +75,23 @@ export default class App extends Vue {
 </style>
 `;
 
+  private vueVersionList = VUE_VERSION;
+  private eleVersionList = ELE_VERSION;
+
+  private vueVersion = VUE_VERSION[0];
+  private eleVersion = ELE_VERSION[0];
+
   public run() {
     (this.$refs.previewComp as any).run();
   }
 
   public mounted() {
     this.run();
+  }
+
+  @Watch('vueVersion', {deep: true})
+  watchVueVersion(newVal: string) {
+    console.log(newVal)
   }
 }
 </script>
@@ -107,7 +132,7 @@ export default class App extends Vue {
       margin: 0;
       padding: 0;
       position: absolute;
-      left: 250px;
+      left: 210px;
       top: 10px;
       height: 40px;
       line-height: 30px;
