@@ -11,6 +11,6 @@ EXPOSE 80
 
 
 RUN cp -r /app/* /usr/share/nginx/html && rm -rf /app
-RUN cp -f /app/nginx.conf /etc/nginx/nginx.conf
+RUN cp -f ./nginx.conf /etc/nginx/nginx.conf
 
 CMD ["nginx","-g","daemon off;"]
