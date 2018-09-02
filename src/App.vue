@@ -140,12 +140,12 @@ export default class App extends Vue {
           white-space: nowrap;
           font-size: 15px;
           cursor: pointer;
-          .contribute {
-            margin-left: 10px;
-          }
           &:hover {
             color: #0086b3;
           }
+        }
+        .contribute {
+          margin-left: 10px;
         }
       }
     }
