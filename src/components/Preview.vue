@@ -46,7 +46,7 @@ export default class Preview extends Vue {
   }
 
   private renderPreview(): void {
-    let getVue = axios.get(`/vue/${this.vueVersion}/vue.js`)
+    let getVue = axios.get(`/vue/${this.vueVersion}/vue.min.js`)
     let getElem = axios.get(`/element-ui/${this.eleVersion}/index.js`)
 
 
