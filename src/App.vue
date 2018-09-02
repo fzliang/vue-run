@@ -35,12 +35,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import Editor from './components/Editor.vue';
 import Preview from './components/Preview.vue';
 import './assets/style/reset.css';
-import { ELE_VERSION } from './constant/EleVersion'
-import { VUE_VERSION } from './constant/VueVersion'
+import { ELE_VERSION } from './constant/EleVersion';
+import { VUE_VERSION } from './constant/VueVersion';
 
 @Component({
   components: {
@@ -87,11 +87,6 @@ export default class App extends Vue {
 
   public mounted() {
     this.run();
-  }
-
-  @Watch('vueVersion', {deep: true})
-  watchVueVersion(newVal: string) {
-    console.log(newVal)
   }
 }
 </script>

@@ -10,11 +10,11 @@
 import { Component, Vue, Model, Prop } from 'vue-property-decorator';
 import axios from 'axios';
 
-const divId= `demo-preview-` + new Date().getTime()
+const divId = `demo-preview-` + new Date().getTime();
 
 @Component
 export default class Preview extends Vue {
-  @Model('codeStr') private codeStr: any;
+  @Model('codeStr') private codeStr!: string;
   private tpl: string = '';
   private js: string = '';
   private style: string = '';
@@ -28,7 +28,6 @@ export default class Preview extends Vue {
     this.destoryPreview();
     this.renderPreview();
   }
-
 
   private getTagTpl(tpl: string, tag: string): string {
     const reg: RegExp = new RegExp('<' + tag + '[^>]*>');
@@ -46,9 +45,8 @@ export default class Preview extends Vue {
   }
 
   private renderPreview(): void {
-    let getVue = axios.get(`/vue/${this.vueVersion}/vue.min.js`)
-    let getElem = axios.get(`/element-ui/${this.eleVersion}/index.js`)
-
+    const getVue = axios.get(`/vue/${this.vueVersion}/vue.min.js`);
+    const getElem = axios.get(`/element-ui/${this.eleVersion}/index.js`);
 
     const oldLinkEle = document.getElementById('preview-link');
     oldLinkEle && oldLinkEle!.parentNode!.removeChild(oldLinkEle);
@@ -56,8 +54,8 @@ export default class Preview extends Vue {
 
     linkEle.href = `element-ui/${this.eleVersion}/theme-chalk/index.css`;
     linkEle.id = 'preview-link';
-    linkEle.setAttribute('type','text/css');
-    linkEle.setAttribute('rel','stylesheet');
+    linkEle.setAttribute('type', 'text/css');
+    linkEle.setAttribute('rel', 'stylesheet');
     document.getElementsByTagName('head')[0].appendChild(linkEle);
     
 
@@ -65,12 +63,12 @@ export default class Preview extends Vue {
       const VueFunc = new Function(res[0].data);
       const VueInstance = (new VueFunc.prototype.constructor).Vue;
 
-      let Ele = new Function('Vue', `this.Vue = Vue; return ${res[1].data};`);
+      const Ele = new Function('Vue', `this.Vue = Vue; return ${res[1].data};`);
 
-      Ele(VueInstance)
+      Ele(VueInstance);
 
       this.renderPreviewHandler(VueInstance);
-    })
+    });
   }
 
   private renderPreviewHandler(V: any): void {
@@ -95,7 +93,7 @@ export default class Preview extends Vue {
           // .replace(/^(?:\s*)([^}|{])*(?={)/, ($1) => '#' + divId + ' ' + $1)
           // .replace(/(?<=[}|,])([^}|{])*(?={)/g, ($1) => '#' + divId + ' ' + $1)
           .replace(/^(\s*)([^}|{]*)({)/, `#${divId} $2 $3`)
-          .replace(/([}|,])([^}|{]*)({)/g, `$1 #${divId} $2 $3`)
+          .replace(/([}|,])([^}|{]*)({)/g, `$1 #${divId} $2 $3`);
 
         const styleEle = document.createElement('style') as any;
         styleEle.type = 'text/css';
@@ -105,23 +103,20 @@ export default class Preview extends Vue {
 
       }
     } catch (ex) {
-      console.log(ex)
-      console.log(ex.message)
-      let head = `[Vue warn]: Error in render: "`;
-      let tail = `(found in <Root>)`;
+      const head = `[Vue warn]: Error in render: "`;
+      const tail = `(found in <Root>)`;
 
-      let msg = ex.message;
-      let start = msg.indexOf(head) > -1? msg.indexOf(head) + head.length : 0;
-      let end = msg.indexOf(tail) > -1? msg.indexOf(tail) : msg.length;
+      const msg = ex.message;
+      const start = msg.indexOf(head) > -1 ? msg.indexOf(head) + head.length : 0;
+      const end = msg.indexOf(tail) > -1 ? msg.indexOf(tail) : msg.length;
 
       this.errMsg = msg.slice(start, end);
-      console.log(this.errMsg)
     }
   }
 
   private destoryPreview(): void {
     const styleEle = document.getElementById('preview-style');
-    this.errMsg = ''
+    this.errMsg = '';
     styleEle && styleEle!.parentNode!.removeChild(styleEle);
     if (this.component !== null) {
         (this.$refs.preview as any).removeChild(this.component.$el);
