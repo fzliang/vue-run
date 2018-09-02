@@ -51,7 +51,7 @@ import { VUE_VERSION } from './constant/VueVersion';
 export default class App extends Vue {
     private codeStr: string = `<template>
   <div>
-   <span>{{msg}}</span>
+   <el-alert :title="msg" type="success" />
   </div>
 </template>
 
@@ -69,9 +69,7 @@ export default class App extends Vue {
 <\/script>
 
 <style>
-  div span {
-    color: red;
-  }
+
 </style>
 `;
 
