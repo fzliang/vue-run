@@ -14,15 +14,15 @@ const divId = `demo-preview-` + new Date().getTime();
 
 @Component
 export default class Preview extends Vue {
+
+  @Prop(String) public eleVersion!: string;
+  @Prop(String) public vueVersion!: string;
   @Model('codeStr') private codeStr!: string;
   private tpl: string = '';
   private js: string = '';
   private style: string = '';
   private component: any = null;
   private errMsg: any = '';
-
-  @Prop(String) eleVersion!: string;
-  @Prop(String) vueVersion!: string;
 
   public run(): void {
     this.destoryPreview();
@@ -57,9 +57,9 @@ export default class Preview extends Vue {
     linkEle.setAttribute('type', 'text/css');
     linkEle.setAttribute('rel', 'stylesheet');
     document.getElementsByTagName('head')[0].appendChild(linkEle);
-    
 
-    Promise.all([getVue, getElem]).then(res => {
+
+    Promise.all([getVue, getElem]).then((res) => {
       const VueFunc = new Function(res[0].data);
       const VueInstance = (new VueFunc.prototype.constructor).Vue;
 
