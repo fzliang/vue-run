@@ -50,7 +50,7 @@ export default class Preview extends Vue {
 
     const oldLinkEle = document.getElementById('preview-link');
     oldLinkEle && oldLinkEle!.parentNode!.removeChild(oldLinkEle);
-    const linkEle = document.createElement('link') as any;
+    const linkEle = document.createElement('link') as HTMLLinkElement;
 
     linkEle.href = `element-ui/${this.eleVersion}/theme-chalk/index.css`;
     linkEle.id = 'preview-link';
@@ -85,7 +85,7 @@ export default class Preview extends Vue {
       const ext = V.extend(e);
 
       if (this.component = (new ext!).$mount(),
-        (this.$refs.preview as any).appendChild(this.component.$el),
+        (this.$refs.preview as HTMLElement).appendChild(this.component.$el),
         '' !== this.style
       ) {
         this.style = this.style
@@ -119,7 +119,7 @@ export default class Preview extends Vue {
     this.errMsg = '';
     styleEle && styleEle!.parentNode!.removeChild(styleEle);
     if (this.component !== null) {
-        (this.$refs.preview as any).removeChild(this.component.$el);
+        (this.$refs.preview as HTMLElement).removeChild(this.component.$el);
         this.component!.$destroy();
         this.component = null;
     }
