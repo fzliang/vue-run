@@ -24,8 +24,18 @@
       </ul>
     </header>
     <div class="main">
-      <div class="item">
+      <div class="item" id="codeBlock">
         <Editor v-model="codeStr"></Editor>
+      </div>
+      <div id="split-trigger" class="split-trigger split-trigger-vertical">
+        <div class="split-trigger-bar-con vertical">
+          <i class="split-trigger-bar"></i>
+          <i class="split-trigger-bar"></i>
+          <i class="split-trigger-bar"></i>
+          <i class="split-trigger-bar"></i>
+          <i class="split-trigger-bar"></i>
+          <i class="split-trigger-bar"></i>
+        </div>
       </div>
       <div class="item">
         <Preview v-model="codeStr" ref="previewComp" :vueVersion="vueVersion" :eleVersion="eleVersion"></Preview>
@@ -41,6 +51,7 @@ import Preview from './components/Preview.vue';
 import './assets/style/reset.css';
 import { ELE_VERSION } from './constant/EleVersion';
 import { VUE_VERSION } from './constant/VueVersion';
+import { constants } from 'http2';
 
 @Component({
   components: {
@@ -73,18 +84,48 @@ export default class App extends Vue {
 </style>
 `;
 
-  private vueVersionList = VUE_VERSION;
-  private eleVersionList = ELE_VERSION;
+  private vueVersionList: string[] = VUE_VERSION;
+  private eleVersionList: string[] = ELE_VERSION;
 
-  private vueVersion = VUE_VERSION[0];
-  private eleVersion = ELE_VERSION[0];
+  private vueVersion: string = VUE_VERSION[0];
+  private eleVersion: string = ELE_VERSION[0];
 
   public run() {
     (this.$refs.previewComp as any).run();
   }
 
+  public splitMove() {
+    const splitTriggerEle: (any | null) = document.getElementById('split-trigger');
+
+    const cb: Function = function name(_event: MouseEvent) {
+      const  event = _event || window.event;
+      const disX = event.offsetX;
+
+      document.onmousemove = function(_event) {
+        const event = _event || window.event ;
+        let leftItemWidth = event.x;
+
+        if (leftItemWidth < 100) {
+          leftItemWidth = 100;
+        } else if (leftItemWidth > document.body.clientWidth - 100) {
+          leftItemWidth = document.body.clientWidth - 100;
+        }
+
+        document.getElementById('codeBlock')!.setAttribute('style', 'width: ' + leftItemWidth + 'px');
+      };
+
+      document.onmouseup = function() {
+        document.onmousemove = null;
+        document.onmouseup = null;
+      };
+
+    };
+    splitTriggerEle && (splitTriggerEle.onmousedown = cb);
+  }
+
   public mounted() {
     this.run();
+    this.splitMove();
   }
 }
 </script>
@@ -155,16 +196,11 @@ export default class App extends Vue {
     padding-top: 10px;
     position: relative;
     div.item {
-      min-width: 300px;
-      flex-grow: 1;
       padding: 5px 10px;
       overflow: scroll;
       @media (min-width: 600px){
-        max-width: calc(50% - 10px);
+        width: calc(50% - 50px);
         height: calc(100vh - 80px);
-        &:not(:last-of-type) {
-          border-right: 1px solid #e9e9e9;
-        }
       }
 
       @media (max-width: 600px){
@@ -176,6 +212,43 @@ export default class App extends Vue {
         }
       }
 
+    }
+
+    .split-trigger {
+      border: 1px solid #dcdee2;
+    }
+
+    .split-trigger-vertical {
+      width: 6px;
+      // height: 100%;
+      background: #f8f8f9;
+      border-top: none;
+      border-bottom: none;
+      cursor: col-resize;
+
+
+      @media (max-width: 600px){
+        &:not(:last-of-type) {
+          display: none;
+        }
+      }
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .split-trigger-bar-con.vertical {
+      display: flex;
+      flex-direction: column;
+      height: 32px;
+    }
+    .split-trigger-bar {
+      width: 4px;
+      height: 1px;
+      background: rgba(23,35,61,.25);
+      float: left;
+      margin-top: 3px;
     }
   }
 }
