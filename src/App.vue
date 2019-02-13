@@ -198,19 +198,19 @@ export default class App extends Vue {
     div.item {
       padding: 5px 10px;
       overflow: scroll;
-      @media (min-width: 600px){
+      // @media (min-width: 600px){
         width: calc(50% - 50px);
         height: calc(100vh - 80px);
-      }
+      // }
 
-      @media (max-width: 600px){
-        &:not(:last-of-type) {
-          border-bottom: 1px solid #e9e9e9;
-        }
-        &:last-of-type {
-          margin-top: 10px;
-        }
-      }
+      // @media (max-width: 600px){
+      //   &:not(:last-of-type) {
+      //     border-bottom: 1px solid #e9e9e9;
+      //   }
+      //   &:last-of-type {
+      //     margin-top: 10px;
+      //   }
+      // }
 
     }
 
