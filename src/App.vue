@@ -112,7 +112,7 @@ export default class App extends Vue {
         }
 
         document.getElementById('codeBlock')!.setAttribute('style', 'width: ' + leftItemWidth + 'px');
-        document.getElementById('rightItem')!.setAttribute('style', 'width: ' + (document.body.clientWidth - leftItemWidth - 20)+ 'px')
+        document.getElementById('rightItem')!.setAttribute('style', 'width: ' + (document.body.clientWidth - leftItemWidth - 20) + 'px');
       };
 
       document.onmouseup = function() {
