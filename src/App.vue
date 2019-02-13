@@ -191,7 +191,7 @@ export default class App extends Vue {
     }
   }
   .main {
-    // display: flex;
+    display: flex;
     // flex-wrap: wrap;
     width: 100%;
     padding-top: 10px;
