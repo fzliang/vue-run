@@ -21,3 +21,12 @@ yarn run serve
 yarn run build
 ```
 
+### 本地用docker运行
+
+```bash
+docker build -t vue-run .
+
+docker run -i -t -p 5000:80 vue-run
+```
+
+访问`http://localhost:5000`就可以访问了
