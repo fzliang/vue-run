@@ -37,7 +37,7 @@
           <i class="split-trigger-bar"></i>
         </div>
       </div>
-      <div class="item">
+      <div class="item" id="rightItem">
         <Preview v-model="codeStr" ref="previewComp" :vueVersion="vueVersion" :eleVersion="eleVersion"></Preview>
       </div>
     </div>
@@ -112,6 +112,7 @@ export default class App extends Vue {
         }
 
         document.getElementById('codeBlock')!.setAttribute('style', 'width: ' + leftItemWidth + 'px');
+        document.getElementById('rightItem')!.setAttribute('style', 'width: ' + (document.body.clientWidth - leftItemWidth - 20)+ 'px')
       };
 
       document.onmouseup = function() {
@@ -190,8 +191,8 @@ export default class App extends Vue {
     }
   }
   .main {
-    display: flex;
-    flex-wrap: wrap;
+    // display: flex;
+    // flex-wrap: wrap;
     width: 100%;
     padding-top: 10px;
     position: relative;
