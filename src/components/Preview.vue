@@ -49,10 +49,10 @@ export default class Preview extends Vue {
     const getVue = axios.get(`/vue/${this.vueVersion}/vue.min.js`);
     const getElem = axios.get(`/element-ui/${this.eleVersion}/index.js`);
 
-    const oldLinkEle : (HTMLElement | null) = document.getElementById('preview-link');
+    const oldLinkEle: (HTMLElement | null) = document.getElementById('preview-link');
     oldLinkEle && oldLinkEle!.parentNode!.removeChild(oldLinkEle);
 
-    const linkEle : HTMLLinkElement = document.createElement('link') as HTMLLinkElement;
+    const linkEle: HTMLLinkElement = document.createElement('link') as HTMLLinkElement;
 
     linkEle.href = `element-ui/${this.eleVersion}/theme-chalk/index.css`;
     linkEle.id = 'preview-link';
@@ -97,7 +97,7 @@ export default class Preview extends Vue {
           .replace(/^(\s*)([^}|{]*)({)/, `#${divId} $2 $3`)
           .replace(/([}|,])([^}|{]*)({)/g, `$1 #${divId} $2 $3`);
 
-        const styleEle : HTMLStyleElement = document.createElement('style');
+        const styleEle: HTMLStyleElement = document.createElement('style');
         styleEle.type = 'text/css';
         styleEle.id = 'preview-style';
         styleEle.innerHTML = this.style;
@@ -105,19 +105,19 @@ export default class Preview extends Vue {
 
       }
     } catch (ex) {
-      const head : string = `[Vue warn]: Error in render: "`;
-      const tail : string = `(found in <Root>)`;
+      const head: string = `[Vue warn]: Error in render: "`;
+      const tail: string = `(found in <Root>)`;
 
-      const msg : string = ex.message;
-      const start : number = msg.indexOf(head) > -1 ? msg.indexOf(head) + head.length : 0;
-      const end : number = msg.indexOf(tail) > -1 ? msg.indexOf(tail) : msg.length;
+      const msg: string = ex.message;
+      const start: number = msg.indexOf(head) > -1 ? msg.indexOf(head) + head.length : 0;
+      const end: number = msg.indexOf(tail) > -1 ? msg.indexOf(tail) : msg.length;
 
       this.errMsg = msg.slice(start, end);
     }
   }
 
   private destoryPreview(): void {
-    const styleEle : (HTMLElement | null) = document.getElementById('preview-style');
+    const styleEle: (HTMLElement | null) = document.getElementById('preview-style');
     this.errMsg = '';
     styleEle && styleEle!.parentNode!.removeChild(styleEle);
     if (this.component !== null) {
