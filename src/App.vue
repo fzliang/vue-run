@@ -97,11 +97,11 @@ export default class App extends Vue {
   public splitMove() {
     const splitTriggerEle: (any | null) = document.getElementById('split-trigger');
 
-    const cb: Function = function name(_event: MouseEvent) {
+    const cb = function name(_event: MouseEvent) {
       const  event = _event || window.event;
       const disX = event.offsetX;
 
-      document.onmousemove = function(_event) {
+      document.onmousemove = function(_event: MouseEvent) {
         const event = _event || window.event ;
         let leftItemWidth = event.x;
 
@@ -111,8 +111,12 @@ export default class App extends Vue {
           leftItemWidth = document.body.clientWidth - 100;
         }
 
-        document.getElementById('codeBlock')!.setAttribute('style', 'width: ' + leftItemWidth + 'px');
-        document.getElementById('rightItem')!.setAttribute('style', 'width: ' + (document.body.clientWidth - leftItemWidth - 20) + 'px');
+        document.getElementById('codeBlock')!
+        .setAttribute('style', 'width: ' + leftItemWidth + 'px');
+
+        const rightWidth = document.body.clientWidth - leftItemWidth - 6;
+        document.getElementById('rightItem')!
+        .setAttribute('style', 'width: ' + rightWidth + 'px');
       };
 
       document.onmouseup = function() {
@@ -194,14 +198,16 @@ export default class App extends Vue {
     display: flex;
     // flex-wrap: wrap;
     width: 100%;
-    padding-top: 10px;
+    // padding-top: 10px;
     position: relative;
     div.item {
-      padding: 5px 10px;
+      // padding: 5px 10px;
       overflow: scroll;
+        width: calc(50% - 3px);
+        height: calc(100vh - 40px);
       // @media (min-width: 600px){
-        width: calc(50% - 50px);
-        height: calc(100vh - 80px);
+      //   width: calc(50% - 50px);
+      //   height: calc(100vh - 40px);
       // }
 
       // @media (max-width: 600px){
