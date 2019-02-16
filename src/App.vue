@@ -90,11 +90,11 @@ export default class App extends Vue {
   private vueVersion: string = VUE_VERSION[0];
   private eleVersion: string = ELE_VERSION[0];
 
-  public run() {
+  private run() {
     (this.$refs.previewComp as any).run();
   }
 
-  public splitMove() {
+  private splitMove() {
     const splitTriggerEle: (any | null) = document.getElementById('split-trigger');
 
     const cb = function name(_event: MouseEvent) {
@@ -128,7 +128,18 @@ export default class App extends Vue {
     splitTriggerEle && (splitTriggerEle.onmousedown = cb);
   }
 
-  public mounted() {
+  private bindKeyDown(event: any) {
+    if ((event.ctrlKey || event.metaKey) && event.keyCode == 83 ) {
+      this.run();
+      return false;
+    }
+  }
+
+  private created() {
+    document.onkeydown = this.bindKeyDown;
+  }
+
+  private mounted() {
     this.run();
     this.splitMove();
   }
