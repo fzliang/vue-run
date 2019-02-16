@@ -51,7 +51,6 @@ import Preview from './components/Preview.vue';
 import './assets/style/reset.css';
 import { ELE_VERSION } from './constant/EleVersion';
 import { VUE_VERSION } from './constant/VueVersion';
-import { constants } from 'http2';
 
 @Component({
   components: {
