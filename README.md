@@ -21,7 +21,7 @@ yarn run serve
 yarn run build
 ```
 
-### 本地用docker运行
+### 本地docker运行
 
 ```bash
 docker build -t vue-run .
