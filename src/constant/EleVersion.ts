@@ -1,5 +1,7 @@
 // Array.from(document.querySelectorAll('h3')).map(item => "'" + item.innerText.slice(3, item.innerText.length) + "'").toString()
 export const ELE_VERSION = [
+  '2.6.1',
+  '2.6.0',
   '2.5.4',
   '2.5.3',
   '2.5.2',
