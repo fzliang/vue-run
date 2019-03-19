@@ -1,4 +1,7 @@
-// Array.from(document.querySelectorAll('h3')).map(item => "'" + item.innerText.slice(3, item.innerText.length) + "'").toString()
+// Array.from(document.querySelectorAll('h3'))
+//   .map(item => 
+//     "'" + item.innerText.slice(3, item.innerText.length) + "'"
+// ).toString()
 export const VUE_VERSION = [
   '2.6.9',
   '2.6.8',
