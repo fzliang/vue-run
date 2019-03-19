@@ -1,5 +1,5 @@
 // Array.from(document.querySelectorAll('h3'))
-//   .map(item => 
+//   .map(item =>
 //     "'" + item.innerText.slice(3, item.innerText.length) + "'"
 // ).toString()
 export const ELE_VERSION = [
