@@ -4,8 +4,8 @@ import App from './App.vue';
 Vue.config.productionTip = false;
 
 const consoleError = window.console.error;
-window.console.error = () => {
-    const args = arguments;
+window.console.error = (...args: [any?, ...any[]]) => {
+    // const args = arguments;
     const errMsg = args && args[0].toString();
     if (errMsg.indexOf(`[Vue warn]`) > -1) {
         throw new Error(errMsg);
