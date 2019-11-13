@@ -1,7 +1,7 @@
 <template>
   <div>
     <div ref="preview" class="preview">
-      <pre class="err-msg">{{errMsg}}</pre>
+      <pre class="err-msg">{{ errMsg }}</pre>
     </div>
   </div>
 </template>
@@ -15,15 +15,14 @@ const divId = `demo-preview-` + new Date().getTime();
 
 @Component
 export default class Preview extends Vue {
-
   @Prop(String) public eleVersion!: string;
   @Prop(String) public vueVersion!: string;
   @Model('codeStr') private codeStr!: string;
   private tpl: string = '';
   private js: string = '';
   private style: string = '';
-  private component: any = null;
-  private errMsg: any = '';
+  private component: Vue | null = null;
+  private errMsg: string = '';
 
   public run(): void {
     this.destoryPreview();
@@ -35,24 +34,44 @@ export default class Preview extends Vue {
     const regRes: RegExpMatchArray | null = tpl.match(reg);
     let res: string = '';
     return regRes
-      ? (res = regRes[0], tpl.slice(tpl.indexOf(res as string) + res.length, tpl.lastIndexOf(`</${tag}>`)))
+      ? ((res = regRes[0]),
+        tpl.slice(
+          tpl.indexOf(res as string) + res.length,
+          tpl.lastIndexOf(`</${tag}>`),
+        ))
       : res;
   }
 
   private splitCodeStr(): void {
-      this.tpl = `<div id="${divId}">${this.getTagTpl(this.codeStr, 'template')}</div>`;
-      this.js = this.getTagTpl(this.codeStr, 'script').replace(/export default/, `return `);
-      this.style = this.getTagTpl(this.codeStr, 'style');
+    this.tpl = `<div id="${divId}">${this.getTagTpl(
+      this.codeStr,
+      'template',
+    )}</div>`;
+    this.js = this.getTagTpl(this.codeStr, 'script').replace(
+      /export default/,
+      `return `,
+    );
+    this.style = this.getTagTpl(this.codeStr, 'style');
   }
 
   private renderPreview(): void {
-    const getVue = axios.get(`/vue/${this.vueVersion}/vue.min.js`);
-    const getElem = axios.get(`/element-ui/${this.eleVersion}/index.js`);
+    const getVue: Promise<any> = axios.get(
+      `/vue/${this.vueVersion}/vue.min.js`,
+    );
+    const getElem: Promise<any> = axios.get(
+      `/element-ui/${this.eleVersion}/index.js`,
+    );
 
-    const oldLinkEle: (HTMLElement | null) = document.getElementById('preview-link');
-    oldLinkEle && oldLinkEle!.parentNode!.removeChild(oldLinkEle);
+    const oldLinkEle: HTMLElement | null = document.getElementById(
+      'preview-link',
+    );
+    if (oldLinkEle instanceof HTMLElement) {
+      oldLinkEle!.parentNode!.removeChild(oldLinkEle);
+    }
 
-    const linkEle: HTMLLinkElement = document.createElement('link') as HTMLLinkElement;
+    const linkEle: HTMLLinkElement = document.createElement(
+      'link',
+    ) as HTMLLinkElement;
 
     linkEle.href = `element-ui/${this.eleVersion}/theme-chalk/index.css`;
     linkEle.id = 'preview-link';
@@ -60,12 +79,15 @@ export default class Preview extends Vue {
     linkEle.setAttribute('rel', 'stylesheet');
     document.getElementsByTagName('head')[0].appendChild(linkEle);
 
-
     Promise.all([getVue, getElem]).then((res) => {
       const VueFunc = new Function(res[0].data);
-      const VueInstance = (new VueFunc.prototype.constructor).Vue;
+      const VueInstance: VueConstructor = new VueFunc.prototype.constructor()
+        .Vue;
 
-      const Ele = new Function('Vue', `this.Vue = Vue; return ${res[1].data};`);
+      const Ele = new Function(
+        'vueInstance',
+        `this.Vue = vueInstance; return ${res[1].data};`,
+      );
 
       Ele(VueInstance);
 
@@ -78,7 +100,7 @@ export default class Preview extends Vue {
       this.splitCodeStr();
 
       if (this.tpl === '' || this.js === '') {
-         return;
+        return;
       }
 
       const e = new Function(this.js)();
@@ -86,12 +108,13 @@ export default class Preview extends Vue {
 
       const ext = V.extend(e);
 
-      if (this.component = (new ext!).$mount(),
-        (this.$refs.preview as HTMLElement).appendChild(this.component.$el),
-        '' !== this.style
-      ) {
+      this.component = new ext!().$mount();
+      (this.$refs.preview as HTMLElement).appendChild(this.component.$el);
+
+      if ('' !== this.style) {
         this.style = this.style
-          .replace(/[\r\n]/g, ' ').replace(/\s+/g, ' ')
+          .replace(/[\r\n]/g, ' ')
+          .replace(/\s+/g, ' ')
           // .replace(/^(?:\s*)([^}|{])*(?={)/, ($1) => '#' + divId + ' ' + $1)
           // .replace(/(?<=[}|,])([^}|{])*(?={)/g, ($1) => '#' + divId + ' ' + $1)
           .replace(/^(\s*)([^}|{]*)({)/, `#${divId} $2 $3`)
@@ -102,28 +125,33 @@ export default class Preview extends Vue {
         styleEle.id = 'preview-style';
         styleEle.innerHTML = this.style;
         document.getElementsByTagName('head')[0].appendChild(styleEle);
-
       }
     } catch (ex) {
       const head: string = `[Vue warn]: Error in render: "`;
       const tail: string = `(found in <Root>)`;
 
       const msg: string = ex.message;
-      const start: number = msg.indexOf(head) > -1 ? msg.indexOf(head) + head.length : 0;
-      const end: number = msg.indexOf(tail) > -1 ? msg.indexOf(tail) : msg.length;
+      const start: number =
+        msg.indexOf(head) > -1 ? msg.indexOf(head) + head.length : 0;
+      const end: number =
+        msg.indexOf(tail) > -1 ? msg.indexOf(tail) : msg.length;
 
       this.errMsg = msg.slice(start, end);
     }
   }
 
   private destoryPreview(): void {
-    const styleEle: (HTMLElement | null) = document.getElementById('preview-style');
+    const styleEle: HTMLElement | null = document.getElementById(
+      'preview-style',
+    );
     this.errMsg = '';
-    styleEle && styleEle!.parentNode!.removeChild(styleEle);
+    if (styleEle) {
+      styleEle!.parentNode!.removeChild(styleEle);
+    }
     if (this.component !== null) {
-        (this.$refs.preview as HTMLElement).removeChild(this.component.$el);
-        this.component!.$destroy();
-        this.component = null;
+      (this.$refs.preview as HTMLElement).removeChild(this.component.$el);
+      this.component!.$destroy();
+      this.component = null;
     }
   }
 
@@ -136,8 +164,8 @@ export default class Preview extends Vue {
 </script>
 
 <style scoped lang="less">
-  .err-msg {
-    color: red;
-    white-space: pre-wrap;
-  }
+.err-msg {
+  color: red;
+  white-space: pre-wrap;
+}
 </style>

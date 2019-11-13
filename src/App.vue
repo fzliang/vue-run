@@ -9,17 +9,23 @@
         <li>
           Vue版本
           <select v-model="vueVersion">
-            <option v-for="item in vueVersionList" :key="item">{{item}}</option>
+            <option v-for="item in vueVersionList" :key="item">
+              {{ item }}
+            </option>
           </select>
         </li>
         <li>
           Element版本
           <select v-model="eleVersion">
-            <option v-for="item in eleVersionList" :key="item">{{item}}</option>
+            <option v-for="item in eleVersionList" :key="item">
+              {{ item }}
+            </option>
           </select>
         </li>
         <li>
-          <a class="nav-link contribute" @click="run"><i class="icon iconfont icon-kuaisuyunxing01"></i> 运行</a>
+          <a class="nav-link contribute" @click="run">
+            <i class="icon iconfont icon-kuaisuyunxing01"></i> 运行
+          </a>
         </li>
       </ul>
     </header>
@@ -38,7 +44,12 @@
         </div>
       </div>
       <div class="item" id="rightItem">
-        <Preview v-model="codeStr" ref="previewComp" :vueVersion="vueVersion" :eleVersion="eleVersion"></Preview>
+        <Preview
+          v-model="codeStr"
+          ref="previewComp"
+          :vueVersion="vueVersion"
+          :eleVersion="eleVersion"
+        ></Preview>
       </div>
     </div>
   </div>
@@ -54,12 +65,12 @@ import { VUE_VERSION } from './constant/VueVersion';
 
 @Component({
   components: {
-      Preview,
-      Editor,
+    Preview,
+    Editor,
   },
 })
 export default class App extends Vue {
-    private codeStr: string = `<template>
+  private codeStr: string = `<template>
   <div>
    <el-alert :title="msg" type="success" />
   </div>
@@ -94,41 +105,50 @@ export default class App extends Vue {
   }
 
   private splitMove() {
-    const splitTriggerEle: (any | null) = document.getElementById('split-trigger');
+    const splitTriggerEle: any | null = document.getElementById(
+      'split-trigger',
+    );
 
-    const cb = function name(_event: MouseEvent) {
-      const  event = _event || window.event;
-      const disX = event.offsetX;
+    function onMouseMove(event: MouseEvent | null) {
+      const mouseMoveEvent: any = event || window.event;
+      let leftItemWidth = mouseMoveEvent.x;
 
-      document.onmousemove = function(_event: MouseEvent) {
-        const event = _event || window.event ;
-        let leftItemWidth = event.x;
+      if (leftItemWidth < 100) {
+        leftItemWidth = 100;
+      } else if (leftItemWidth > document.body.clientWidth - 100) {
+        leftItemWidth = document.body.clientWidth - 100;
+      }
 
-        if (leftItemWidth < 100) {
-          leftItemWidth = 100;
-        } else if (leftItemWidth > document.body.clientWidth - 100) {
-          leftItemWidth = document.body.clientWidth - 100;
-        }
-
-        document.getElementById('codeBlock')!
+      document
+        .getElementById('codeBlock')!
         .setAttribute('style', 'width: ' + leftItemWidth + 'px');
 
-        const rightWidth = document.body.clientWidth - leftItemWidth - 6;
-        document.getElementById('rightItem')!
+      const rightWidth = document.body.clientWidth - leftItemWidth - 6;
+      document
+        .getElementById('rightItem')!
         .setAttribute('style', 'width: ' + rightWidth + 'px');
-      };
+    }
 
-      document.onmouseup = function() {
-        document.onmousemove = null;
-        document.onmouseup = null;
-      };
+    function onMouseUp() {
+      document.onmousemove = null;
+      document.onmouseup = null;
+    }
 
-    };
-    splitTriggerEle && (splitTriggerEle.onmousedown = cb);
+    function onMouseDownCb(event: MouseEvent | null) {
+      const mouseDownEvent: any = event || window.event;
+      const disX = mouseDownEvent.offsetX;
+
+      document.onmousemove = onMouseMove;
+      document.onmouseup = onMouseUp;
+    }
+
+    if (splitTriggerEle) {
+      splitTriggerEle.onmousedown = onMouseDownCb;
+    }
   }
 
-  private bindKeyDown(event: any) {
-    if ((event.ctrlKey || event.metaKey) && event.keyCode == 83 ) {
+  private bindKeyDown(event: KeyboardEvent) {
+    if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
       this.run();
       return false;
     }
@@ -147,7 +167,7 @@ export default class App extends Vue {
 
 <style lang="less">
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -159,7 +179,7 @@ export default class App extends Vue {
     height: 40px;
     background-color: #fff;
     z-index: 9;
-    box-shadow: 0 0 2px rgba(0,0,0,0.25);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
     padding: 5px 20px;
     position: relative;
     .logo {
@@ -167,7 +187,8 @@ export default class App extends Vue {
       font-size: 18px;
       line-height: 40px;
       color: #2c3e50;
-      font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+      font-family: "Dosis", "Source Sans Pro", "Helvetica Neue", Arial,
+        sans-serif;
       font-weight: 500;
       img {
         vertical-align: middle;
@@ -189,7 +210,7 @@ export default class App extends Vue {
         display: inline-block;
         position: relative;
         margin: 0 0.6em;
-        .nav-link{
+        .nav-link {
           padding-bottom: 3px;
           white-space: nowrap;
           font-size: 15px;
@@ -213,8 +234,8 @@ export default class App extends Vue {
     div.item {
       // padding: 5px 10px;
       overflow: scroll;
-        width: calc(50% - 3px);
-        height: calc(100vh - 40px);
+      width: calc(50% - 3px);
+      height: calc(100vh - 40px);
       // @media (min-width: 600px){
       //   width: calc(50% - 50px);
       //   height: calc(100vh - 40px);
@@ -228,7 +249,6 @@ export default class App extends Vue {
       //     margin-top: 10px;
       //   }
       // }
-
     }
 
     .split-trigger {
@@ -243,8 +263,7 @@ export default class App extends Vue {
       border-bottom: none;
       cursor: col-resize;
 
-
-      @media (max-width: 600px){
+      @media (max-width: 600px) {
         &:not(:last-of-type) {
           display: none;
         }
@@ -263,7 +282,7 @@ export default class App extends Vue {
     .split-trigger-bar {
       width: 4px;
       height: 1px;
-      background: rgba(23,35,61,.25);
+      background: rgba(23, 35, 61, 0.25);
       float: left;
       margin-top: 3px;
     }
