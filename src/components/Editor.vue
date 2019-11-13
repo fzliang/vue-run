@@ -34,9 +34,7 @@ export default class Editor extends Vue {
   };
 
   @Emit('change')
-  private onCmCodeChange(newCode: string) {
-    return 0;
-  }
+  private onCmCodeChange(newCode: string) {}
 }
 </script>
 <style lang="less">
