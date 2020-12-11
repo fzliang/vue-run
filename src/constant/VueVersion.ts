@@ -3,6 +3,8 @@
 //     "'" + item.innerText.slice(3, item.innerText.length) + "'"
 // ).toString()
 export const VUE_VERSION = [
+  '2.6.12',
+  '2.6.11',
   '2.6.10',
   '2.6.9',
   '2.6.8',
